@@ -1,0 +1,29 @@
+# PyTorch pentru Apple Silicon (MPS)
+torch>=2.1.0
+torchvision>=0.16.0
+
+# Model library
+timm>=0.9.0
+
+# Data & ML utilities
+numpy>=1.24.0
+pandas>=2.0.0
+pillow>=10.0.0
+
+# Metrics & visualization
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Configuration
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# Progress bars
+tqdm>=4.65.0
+
+# Logging
+tensorboard>=2.14.0
+
+# For M-series Macs
+# pytorch-metal  # Optional: pentru optimizări extra pe Metal
