@@ -28,7 +28,7 @@ def main():
         'batch_size': 64,  # Ajustează după RAM disponibil
         'learning_rate': 1e-3,
         'weight_decay': 0.05,
-        'num_epochs': 5,  # Pentru început, apoi poți crește
+        'num_epochs': 50,  # Pentru început, apoi poți crește
         'num_workers': 2,  # Pentru MacBook
     }
     
