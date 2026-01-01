@@ -31,7 +31,7 @@ def main():
         'label_smoothing': 0.1,
         'gradient_clip': 1.0,
         'use_amp': True,  # <--- ACTIVAT Mixed Precision
-        'num_workers': 4  # Putem crește puțin și workerii pe M4
+        'num_workers': 2  # Putem crește puțin și workerii pe M4
     }
 
     print("=" * 70)

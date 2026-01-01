@@ -24,7 +24,7 @@ def main():
     config = {
         'model_name': 'vit_tiny_patch16_224',
         'num_classes': 10,
-        'batch_size': 64,
+        'batch_size': 128,
         'learning_rate': 1e-3,
         'weight_decay': 0.1,  # Crescut de la 0.05
         'num_epochs': 50,  # Full training

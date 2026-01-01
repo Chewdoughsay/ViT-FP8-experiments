@@ -25,7 +25,7 @@ def main():
     config = {
         'model_name': 'vit_tiny_patch16_224',
         'num_classes': 10,
-        'batch_size': 64,  # Ajustează după RAM disponibil
+        'batch_size': 128,  # Ajustează după RAM disponibil
         'learning_rate': 1e-3,
         'weight_decay': 0.05,
         'num_epochs': 50,  # Pentru început, apoi poți crește
