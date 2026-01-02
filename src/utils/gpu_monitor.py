@@ -87,7 +87,7 @@ if __name__ == "__main__":
     parser.add_argument('--name', type=str, default='monitor_log', help='Nume fisier log')
     args = parser.parse_args()
 
-    Path("results/logs").mkdir(parents=True, exist_ok=True)
+    Path("../../results/logs").mkdir(parents=True, exist_ok=True)
     file_path = f"results/logs/{args.name}.csv"
 
     monitor_stream(file_path)

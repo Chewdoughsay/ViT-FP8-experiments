@@ -55,7 +55,7 @@ def plot_comparison_metric(experiments_data, metric_key, title, ylabel, filename
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
 
-    save_path = Path('results/plots') / filename
+    save_path = Path('../results/plots') / filename
     plt.savefig(save_path, dpi=300)
     print(f"📈 Grafic salvat: {save_path}")
     plt.close()
@@ -94,7 +94,7 @@ def plot_individual_dashboard(exp_name, data):
              bbox=dict(facecolor='white', alpha=0.8))
 
     plt.tight_layout()
-    save_path = Path('results/plots') / f'dashboard_{exp_name}.png'
+    save_path = Path('../results/plots') / f'dashboard_{exp_name}.png'
     plt.savefig(save_path, dpi=300)
     print(f"📊 Dashboard salvat: {save_path}")
     plt.close()
@@ -102,7 +102,7 @@ def plot_individual_dashboard(exp_name, data):
 
 def main():
     # Asigura folderul de ploturi
-    Path('results/plots').mkdir(parents=True, exist_ok=True)
+    Path('../results/plots').mkdir(parents=True, exist_ok=True)
 
     experiments = [
         'baseline_fp32',

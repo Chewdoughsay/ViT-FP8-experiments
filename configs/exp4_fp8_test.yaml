@@ -1,0 +1,39 @@
+name: "exp4_fp8_test"
+description: "FP8 quantization test - convert FP16 model to FP8 and back"
+
+model:
+  name: "vit_tiny_patch16_224"
+  num_classes: 10
+  pretrained: false
+  load_checkpoint: "results/checkpoints/exp3_fp16_fixed/best_model.pt"  # Load trained FP16 model
+
+data:
+  dataset: "cifar10"
+  batch_size: 128
+  num_workers: 2
+  augmentation: "extended"
+
+# This is not a training run, but a conversion + evaluation test
+test_only: true
+
+quantization:
+  enabled: true
+  source_precision: "fp16"
+  target_precision: "fp8"
+  method: "post_training_quantization"  # Convert after training
+
+  # Test pipeline:
+  # 1. Load FP16 model
+  # 2. Convert to FP8
+  # 3. Convert back to FP16
+  # 4. Evaluate accuracy loss
+
+hardware:
+  device: "mps"  # Note: MPS doesn't support FP8 natively, will use CPU emulation
+
+paths:
+  data_dir: "./data"
+  save_dir: "results/checkpoints/exp4_fp8_test"
+
+# Expected: Measure accuracy degradation from FP16 -> FP8 -> FP16 conversion
+# Hypothesis: Small accuracy loss (<1%) if quantization is done properly

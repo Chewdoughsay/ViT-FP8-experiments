@@ -1,0 +1,41 @@
+name: "exp3_fp16_fixed"
+description: "FP16 with FULL regularization (FIXED - extended augmentation)"
+
+model:
+  name: "vit_tiny_patch16_224"
+  num_classes: 10
+  pretrained: false
+
+data:
+  dataset: "cifar10"
+  batch_size: 128
+  num_workers: 2
+  augmentation: "extended"  # FIX: Was 'basic', now 'extended' like exp2
+
+training:
+  num_epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.1  # Same as exp2
+  optimizer: "adamw"
+  scheduler: "cosine"
+
+  # Full regularization (same as exp2)
+  label_smoothing: 0.1
+  gradient_clip: 1.0
+  warmup_epochs: 5
+
+  # Mixed Precision
+  use_amp: true
+  precision: "fp16"
+
+  # Checkpointing
+  save_every: 10
+
+hardware:
+  device: "mps"
+
+paths:
+  data_dir: "./data"
+  save_dir: "results/checkpoints/exp3_fp16_fixed"
+
+# Expected result: ~83% accuracy like exp2, possibly slightly faster

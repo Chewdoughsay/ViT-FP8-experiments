@@ -1,0 +1,39 @@
+name: "exp2_regularized"
+description: "FP32 with full regularization (BEST MODEL)"
+
+model:
+  name: "vit_tiny_patch16_224"
+  num_classes: 10
+  pretrained: false
+
+data:
+  dataset: "cifar10"
+  batch_size: 128
+  num_workers: 2
+  augmentation: "extended"  # ColorJitter + RandomRotation + RandomErasing
+
+training:
+  num_epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.1  # Increased from baseline
+  optimizer: "adamw"
+  scheduler: "cosine"
+
+  # Full regularization
+  label_smoothing: 0.1
+  gradient_clip: 1.0
+  warmup_epochs: 5
+
+  # Precision
+  use_amp: false
+  precision: "fp32"
+
+  # Checkpointing
+  save_every: 10
+
+hardware:
+  device: "mps"
+
+paths:
+  data_dir: "./data"
+  save_dir: "results/checkpoints/exp2_regularized"

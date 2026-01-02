@@ -90,7 +90,7 @@ def main():
         device=device,
         learning_rate=config['learning_rate'],
         weight_decay=config['weight_decay'],
-        save_dir='results/checkpoints/experiment2_regularized',
+        save_dir='../experiments/results/checkpoints/experiment2_regularized',
         label_smoothing=config['label_smoothing'],  # Nou
         gradient_clip=config['gradient_clip'],  # Nou
         warmup_epochs=config['warmup_epochs']  # Nou

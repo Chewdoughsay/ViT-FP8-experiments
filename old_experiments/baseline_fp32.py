@@ -79,7 +79,7 @@ def main():
         device=device,
         learning_rate=config['learning_rate'],
         weight_decay=config['weight_decay'],
-        save_dir='results/checkpoints/baseline_fp32'
+        save_dir='../experiments/results/checkpoints/baseline_fp32'
     )
     
     # Start training

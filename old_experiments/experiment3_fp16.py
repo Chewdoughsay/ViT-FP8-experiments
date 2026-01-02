@@ -14,7 +14,7 @@ sys.path.insert(0, str(project_root))
 
 import torch
 from src.models.vit_model import create_vit_model, get_model_info
-from src.data.dataset import get_cifar10_loaders
+from src.data.dataset import get_cifar10_loaders_v2
 from src.training.trainer import ViTTrainer
 
 
@@ -47,7 +47,7 @@ def main():
 
     # Load data
     print(f"\nLoading CIFAR-10 dataset (Batch Size: {config['batch_size']})...")
-    train_loader, test_loader = get_cifar10_loaders(
+    train_loader, test_loader = get_cifar10_loaders_v2(
         batch_size=config['batch_size'],
         num_workers=config['num_workers']
     )
@@ -68,7 +68,7 @@ def main():
         device=device,
         learning_rate=config['learning_rate'],
         weight_decay=config['weight_decay'],
-        save_dir='results/checkpoints/experiment3_fp16',  # Folder nou
+        save_dir='../experiments/results/checkpoints/experiment3_fp16',  # Folder nou
         label_smoothing=config['label_smoothing'],
         gradient_clip=config['gradient_clip'],
         warmup_epochs=config['warmup_epochs'],
