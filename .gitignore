@@ -4,32 +4,81 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
+# Virtual environments
 venv/
 env/
 ENV/
+.venv/
 
 # PyCharm
 .idea/
 *.iml
 
-# Data și results
-data/
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Data (CIFAR-10 dataset)
+data/cifar-10-batches-py/
+data/cifar-10-python.tar.gz
+data/*.tar.gz
+data/*.zip
+
+# Results and outputs
 results/
+outputs/
+logs/
+checkpoints/
 *.pt
 *.pth
 *.ckpt
 
+# Plots and visualizations
+*.png
+*.jpg
+*.jpeg
+*.svg
+!docs/*.png
+!assets/*.png
+
+# Metrics
+*.json
+!configs/*.json
+
 # OS
 .DS_Store
 Thumbs.db
-
-# Jupyter
-.ipynb_checkpoints/
+*.swp
+*.swo
+*~
 
 # LaTeX
 *.aux
 *.log
 *.out
 *.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.bbl
+*.blg
 *.pdf
 !docs/*.pdf
+!reports/*.pdf
+
+# Misc
+*.bak
+*.tmp
+.env
+.env.local
+
+# IMPORTANT: Don't ignore Python source files
+# (By default we keep all .py files)
+# If you need to ignore specific files, add them explicitly:
+# !src/**/*.py
+# !scripts/**/*.py
+# !configs/**/*.py
