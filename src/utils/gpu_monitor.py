@@ -91,3 +91,5 @@ if __name__ == "__main__":
     file_path = f"results/logs/{args.name}.csv"
 
     monitor_stream(file_path)
+
+    #sudo python src/utils/gpu_monitor.py --name run_fp16_extended

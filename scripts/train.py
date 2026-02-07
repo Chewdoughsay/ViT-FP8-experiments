@@ -208,3 +208,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+#python scripts/train.py --config configs/exp3_fp16_fixed.yaml
