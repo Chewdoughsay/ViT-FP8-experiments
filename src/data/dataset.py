@@ -1,7 +1,40 @@
 """
-CIFAR-10 Dataset Loader
-Single loader with configurable augmentation level
-Paths are always relative to project root
+CIFAR-10 dataset loader with configurable augmentation.
+
+This module provides a unified interface for loading CIFAR-10 data with
+different augmentation strategies. Features:
+- Automatic path resolution relative to project root
+- Configurable augmentation levels (basic vs extended)
+- Normalized using CIFAR-10 statistics
+- Resized to 224×224 for Vision Transformers
+- Persistent workers for efficient data loading
+
+The loader automatically handles:
+- Dataset download (if not already present)
+- Train/test split (50,000 train / 10,000 test)
+- Image preprocessing and normalization
+- Batch loading with multi-worker support
+
+Example:
+    >>> from src.data.dataset import get_cifar10_loaders
+    >>>
+    >>> # Basic augmentation (default)
+    >>> train_loader, test_loader = get_cifar10_loaders(
+    ...     batch_size=128,
+    ...     augmentation='basic'
+    ... )
+    >>>
+    >>> # Extended augmentation for better generalization
+    >>> train_loader, test_loader = get_cifar10_loaders(
+    ...     batch_size=128,
+    ...     augmentation='extended'
+    ... )
+    >>>
+    >>> # Iterate through batches
+    >>> for images, labels in train_loader:
+    ...     # images: [128, 3, 224, 224]
+    ...     # labels: [128]
+    ...     outputs = model(images)
 """
 import torch
 from torch.utils.data import DataLoader
@@ -11,7 +44,17 @@ from pathlib import Path
 
 # Find project root (from src/data/dataset.py)
 def get_project_root():
-    """Get project root directory"""
+    """
+    Get the project root directory.
+
+    Returns:
+        Path: Absolute path to project root (parent of src/ directory)
+
+    Example:
+        >>> root = get_project_root()
+        >>> print(root)
+        /Users/username/PycharmProjects/ViT-FP8-experiments
+    """
     current = Path(__file__).resolve().parent
     # From src/data/dataset.py, go up 2 levels to root
     return current.parent.parent
@@ -30,19 +73,82 @@ def get_cifar10_loaders(
     pin_memory=False
 ):
     """
-    Create CIFAR-10 data loaders with configurable augmentation
+    Create CIFAR-10 train and test data loaders with configurable augmentation.
+
+    Loads CIFAR-10 dataset with preprocessing for Vision Transformers:
+    - Images resized from 32×32 to 224×224 (ViT standard input size)
+    - Normalized using CIFAR-10 mean and std
+    - Training set augmented (validation set is not augmented)
+    - Automatic download if dataset not present
 
     Args:
-        batch_size: Batch size for training and testing
-        num_workers: Number of worker processes for data loading
-        augmentation: 'basic' or 'extended'
-            - basic: RandomCrop + RandomHorizontalFlip
-            - extended: basic + ColorJitter + RandomRotation + RandomErasing
-        data_dir: Directory to store/load dataset (default: PROJECT_ROOT/data)
-        pin_memory: Pin memory for faster GPU transfer
+        batch_size (int): Number of samples per batch. Default: 128
+        num_workers (int): Number of subprocesses for data loading. Default: 2
+            - 0 = single-process loading (slower but simpler)
+            - 2-4 = good for most systems
+            - Higher values may not improve speed (depends on CPU/disk)
+        augmentation (str): Data augmentation level. Default: 'basic'
+            - 'basic': RandomCrop with padding + RandomHorizontalFlip
+            - 'extended': basic + ColorJitter + RandomRotation + RandomErasing
+        data_dir (str, optional): Directory to store/load CIFAR-10 data.
+            Default: None (uses PROJECT_ROOT/data)
+        pin_memory (bool): Pin memory in RAM for faster GPU transfer. Default: False
+            - Set to True when using CUDA (speeds up data transfer to GPU)
+            - Keep False for CPU or MPS
 
     Returns:
-        train_loader, test_loader
+        tuple: (train_loader, test_loader)
+            - train_loader (DataLoader): Training data with augmentation
+            - test_loader (DataLoader): Test data without augmentation
+
+    Augmentation Details:
+        Basic augmentation (standard for CIFAR-10):
+            - Resize to 224×224
+            - RandomCrop 224×224 with padding=28 (adds some variation)
+            - RandomHorizontalFlip with p=0.5
+            - Normalization
+
+        Extended augmentation (stronger regularization):
+            - All basic augmentations, plus:
+            - ColorJitter: brightness, contrast, saturation, hue variations
+            - RandomRotation: ±15 degrees
+            - RandomErasing: randomly occludes patches (p=0.5, simulates missing data)
+
+    Data Statistics:
+        - Training samples: 50,000
+        - Test samples: 10,000
+        - Classes: 10 (airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck)
+        - Original size: 32×32×3
+        - Resized to: 224×224×3 (for Vision Transformers)
+        - Normalization: mean=[0.4914, 0.4822, 0.4465], std=[0.2470, 0.2435, 0.2616]
+
+    Example:
+        >>> # Basic usage
+        >>> train_loader, test_loader = get_cifar10_loaders(batch_size=128)
+        >>> print(f"Train batches: {len(train_loader)}")
+        Train batches: 391
+        >>> print(f"Test batches: {len(test_loader)}")
+        Test batches: 79
+        >>>
+        >>> # Extended augmentation for better generalization
+        >>> train_loader, test_loader = get_cifar10_loaders(
+        ...     batch_size=64,
+        ...     num_workers=4,
+        ...     augmentation='extended',
+        ...     pin_memory=True  # For CUDA
+        ... )
+        >>>
+        >>> # Check batch shape
+        >>> images, labels = next(iter(train_loader))
+        >>> print(f"Image batch: {images.shape}")  # [128, 3, 224, 224]
+        >>> print(f"Label batch: {labels.shape}")  # [128]
+
+    Notes:
+        - First run will download CIFAR-10 (~170MB) to data_dir
+        - Persistent workers (num_workers > 0) speeds up data loading
+        - Extended augmentation improves generalization but slows training slightly
+        - Test set is never augmented (only resized and normalized)
+        - Images are returned as tensors in range [~-2, ~2] after normalization
     """
 
     # Use default data dir if not specified
@@ -143,7 +249,29 @@ def get_cifar10_loaders(
 
 
 def get_dataset_info():
-    """Return CIFAR-10 dataset information"""
+    """
+    Return metadata about the CIFAR-10 dataset.
+
+    Returns:
+        dict: Dataset information with keys:
+            - name (str): Dataset name
+            - num_classes (int): Number of classes
+            - train_size (int): Number of training samples
+            - test_size (int): Number of test samples
+            - image_size (tuple): Original image dimensions (height, width)
+            - num_channels (int): Number of color channels
+            - classes (list): Class names in order
+
+    Example:
+        >>> info = get_dataset_info()
+        >>> print(f"Dataset: {info['name']}")
+        Dataset: CIFAR-10
+        >>> print(f"Classes: {info['classes']}")
+        Classes: ['airplane', 'automobile', 'bird', 'cat', 'deer',
+                  'dog', 'frog', 'horse', 'ship', 'truck']
+        >>> print(f"Training samples: {info['train_size']}")
+        Training samples: 50000
+    """
     return {
         'name': 'CIFAR-10',
         'num_classes': 10,
