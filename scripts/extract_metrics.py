@@ -312,11 +312,11 @@ def compare_experiments(experiment_paths, output_csv=None):
             stats = compute_statistics(metrics)
             results.append({'name': exp_name, 'stats': stats})
         except FileNotFoundError:
-            print(f"⚠️  Warning: Metrics not found for {exp_name}, skipping...")
+            print(f"Warning: Metrics not found for {exp_name}, skipping...")
             continue
 
     if not results:
-        print("❌ No experiments found with valid metrics")
+        print("No experiments found with valid metrics")
         return results
 
     # Print comparison table
@@ -370,7 +370,7 @@ def compare_experiments(experiment_paths, output_csv=None):
                     stats['total_time_minutes']
                 ])
 
-        print(f"✓ Comparison table saved to: {output_path}\n")
+        print(f"Comparison table saved to: {output_path}\n")
 
     return results
 
@@ -500,36 +500,36 @@ Examples:
         metrics_file = exp_path / 'metrics' / 'final_metrics.json'
 
         try:
-            print(f"📊 Loading metrics from: {metrics_file}")
+            print(f"Loading metrics from: {metrics_file}")
             metrics = load_experiment_metrics(metrics_file)
             stats = compute_statistics(metrics)
             print_experiment_summary(exp_path.name, stats, detailed=args.detailed)
         except FileNotFoundError as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
             sys.exit(1)
         except json.JSONDecodeError as e:
-            print(f"❌ Error parsing metrics JSON: {e}")
+            print(f"Error parsing metrics JSON: {e}")
             sys.exit(1)
 
     # Comparison mode
     elif args.compare:
-        print(f"📊 Comparing {len(args.compare)} experiments...")
+        print(f"Comparing {len(args.compare)} experiments...")
         compare_experiments(args.compare, output_csv=args.output)
 
     # All experiments mode
     elif args.all:
-        print("📊 Discovering experiments in results/ directory...")
+        print("Discovering experiments in results/ directory...")
         experiments = discover_experiments('results')
 
         if not experiments:
-            print("❌ No experiments found in results/ directory")
+            print("No experiments found in results/ directory")
             sys.exit(1)
 
-        print(f"✓ Found {len(experiments)} experiments: {[e.name for e in experiments]}")
+        print(f"Found {len(experiments)} experiments: {[e.name for e in experiments]}")
         compare_experiments(experiments, output_csv=args.output)
 
     else:
-        print("❌ Error: Must specify --experiment, --compare, or --all")
+        print("Error: Must specify --experiment, --compare, or --all")
         parser.print_help()
         sys.exit(1)
 

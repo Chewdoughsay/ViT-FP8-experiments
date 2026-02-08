@@ -315,9 +315,9 @@ def print_analysis_summary(experiments_metrics):
     fastest_exp = [name for name, t in valid_times.items()
                    if t == fastest_time][0]
 
-    print(f"🏆 Best Accuracy: {best_exp} ({best_acc:.2%})")
-    print(f"🎯 Best Generalization (lowest overfitting): {best_overfit_exp} ({best_overfit:.2f}%)")
-    print(f"⚡ Fastest Training: {fastest_exp} ({fastest_time:.2f} hours)")
+    print(f"Best Accuracy: {best_exp} ({best_acc:.2%})")
+    print(f"Best Generalization (lowest overfitting): {best_overfit_exp} ({best_overfit:.2f}%)")
+    print(f"Fastest Training: {fastest_exp} ({fastest_time:.2f} hours)")
 
     # FP16 speedup analysis
     if 'BaseFP32' in experiments_metrics and 'BaseFP16' in experiments_metrics:
@@ -326,7 +326,7 @@ def print_analysis_summary(experiments_metrics):
             fp16_time = experiments_metrics['BaseFP16']['total_time_hours']
             speedup = fp32_time / fp16_time
             reduction = ((fp32_time - fp16_time) / fp32_time) * 100
-            print(f"\n📊 FP16 Speedup (BaseFP16 vs BaseFP32): {speedup:.2f}x faster ({reduction:.0f}% time reduction)")
+            print(f"\nFP16 Speedup (BaseFP16 vs BaseFP32): {speedup:.2f}x faster ({reduction:.0f}% time reduction)")
 
     if 'AugmFP32' in experiments_metrics and 'AugmFP16' in experiments_metrics:
         if experiments_metrics['AugmFP32'] and experiments_metrics['AugmFP16']:
@@ -334,10 +334,10 @@ def print_analysis_summary(experiments_metrics):
             fp16_time = experiments_metrics['AugmFP16']['total_time_hours']
             speedup = fp32_time / fp16_time
             reduction = ((fp32_time - fp16_time) / fp32_time) * 100
-            print(f"📊 FP16 Speedup (AugmFP16 vs AugmFP32): {speedup:.2f}x faster ({reduction:.0f}% time reduction)")
+            print(f"FP16 Speedup (AugmFP16 vs AugmFP32): {speedup:.2f}x faster ({reduction:.0f}% time reduction)")
 
     # Recommended configuration
-    print(f"\n💡 Recommended: AugmFP16")
+    print(f"\nRecommended: AugmFP16")
     if 'AugmFP16' in experiments_metrics and experiments_metrics['AugmFP16']:
         augm = experiments_metrics['AugmFP16']
         print(f"   - Accuracy: {augm['best_val_acc']:.2%}")
@@ -402,7 +402,7 @@ def save_comparison_csv(experiments_metrics, output_path='results/comparison_tab
                     row.append('NOT RUN')
             writer.writerow(row)
 
-    print(f"✓ Comparison table saved to: {output_path}")
+    print(f"Comparison table saved to: {output_path}")
 
 
 def save_detailed_json(experiments_metrics, output_path='results/experiment_comparison.json'):
@@ -419,7 +419,7 @@ def save_detailed_json(experiments_metrics, output_path='results/experiment_comp
     with open(output_path, 'w') as f:
         json.dump(experiments_metrics, f, indent=2)
 
-    print(f"✓ Detailed metrics saved to: {output_path}")
+    print(f"Detailed metrics saved to: {output_path}")
 
 
 def main():
@@ -449,14 +449,14 @@ def main():
                 experiments_metrics[exp_name] = metrics
                 print("✓")
             else:
-                print("⚠️  (incomplete data)")
+                print("(incomplete data)")
         else:
-            print("❌ (not found)")
+            print("(not found)")
 
     print()
 
     if not experiments_metrics:
-        print("❌ No experiments found! Run experiments first:")
+        print("No experiments found! Run experiments first:")
         print("  $ python scripts/train_BaseFP32.py")
         print("  $ python scripts/train_AugmFP32.py")
         print("  $ python scripts/train_BaseFP16.py")
@@ -476,7 +476,7 @@ def main():
     save_detailed_json(experiments_metrics, 'results/experiment_comparison.json')
     print("="*100 + "\n")
 
-    print("✅ Analysis complete! Use the generated files for your report:")
+    print("Analysis complete! Use the generated files for your report:")
     print("   - results/comparison_table.csv (for LaTeX tables)")
     print("   - results/experiment_comparison.json (for plotting)")
     print()

@@ -99,7 +99,7 @@ def quantize_model_to_fp8(model):
             if param.requires_grad:  # Only quantize trainable weights
                 param.data = quantize_to_fp8(param.data)
 
-    print("✓ Model quantized to FP8 (E4M3)")
+    print("Model quantized to FP8 (E4M3)")
     return model
 
 
@@ -178,14 +178,14 @@ def main():
     # Check if source model exists
     source_path = Path(CONFIG['source_model'])
     if not source_path.exists():
-        print(f"❌ Error: Source model not found!")
+        print(f"Error: Source model not found!")
         print(f"   Expected: {source_path}")
         print(f"\n   Please run AugmFP16 experiment first:")
         print(f"   $ python scripts/train_AugmFP16.py")
         sys.exit(1)
 
     # Create model
-    print("📦 Creating model...")
+    print("Creating model...")
     device = torch.device(CONFIG['device'])
     model = create_vit_model(
         model_name=CONFIG['model_name'],
@@ -194,15 +194,15 @@ def main():
     )
 
     # Load trained weights
-    print(f"📂 Loading trained weights from: {source_path}")
+    print(f"Loading trained weights from: {source_path}")
     checkpoint = torch.load(source_path, map_location=device)
     model.load_state_dict(checkpoint['model_state_dict'])
     model = model.to(device)
-    print(f"✓ Model loaded (original val_acc: {checkpoint['val_acc']:.4f})")
+    print(f"Model loaded (original val_acc: {checkpoint['val_acc']:.4f})")
     print()
 
     # Load test data
-    print("📊 Loading CIFAR-10 test set...")
+    print("Loading CIFAR-10 test set...")
     _, test_loader = get_cifar10_loaders(
         batch_size=CONFIG['batch_size'],
         num_workers=2,
@@ -284,13 +284,13 @@ def main():
 
     # Interpretation
     if acc_loss_percent < 1.0:
-        print("✅ Excellent! <1% accuracy loss - FP8 is highly viable!")
+        print("Excellent! <1% accuracy loss - FP8 is highly viable!")
     elif acc_loss_percent < 3.0:
-        print("✅ Good! <3% accuracy loss - FP8 is viable for deployment")
+        print("Good! <3% accuracy loss - FP8 is viable for deployment")
     elif acc_loss_percent < 5.0:
-        print("⚠️  Moderate: 3-5% accuracy loss - Consider QAT (Quantization-Aware Training)")
+        print("Moderate: 3-5% accuracy loss - Consider QAT (Quantization-Aware Training)")
     else:
-        print("❌ High degradation: >5% accuracy loss - FP8 may not be suitable")
+        print("High degradation: >5% accuracy loss - FP8 may not be suitable")
 
     print(f"\nResults saved to: {results_path}")
     print("="*70 + "\n")

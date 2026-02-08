@@ -236,7 +236,7 @@ def plot_learning_rate(metrics, experiment_name, save_dir):
     save_dir.mkdir(parents=True, exist_ok=True)
 
     if 'learning_rates' not in metrics or not metrics['learning_rates']:
-        print(f"⚠️  No learning rate data found for {experiment_name}")
+        print(f"No learning rate data found for {experiment_name}")
         return None
 
     epochs = range(1, len(metrics['learning_rates']) + 1)
@@ -291,7 +291,7 @@ def plot_hardware_stats(hw_stats, experiment_name, save_dir):
     full_stats = hw_stats.get('full_stats', {})
 
     if not full_stats.get('timestamps'):
-        print(f"⚠️  No hardware time-series data found for {experiment_name}")
+        print(f"No hardware time-series data found for {experiment_name}")
         return None
 
     timestamps = np.array(full_stats['timestamps']) / 60  # Convert to minutes
@@ -506,8 +506,8 @@ Examples:
             output_dir = exp_path / 'plots'
 
         try:
-            print(f"📊 Generating plots for: {exp_name}")
-            print(f"📁 Output directory: {output_dir}\n")
+            print(f"Generating plots for: {exp_name}")
+            print(f"Output directory: {output_dir}\n")
 
             # Load metrics
             metrics = load_metrics(metrics_file)
@@ -534,7 +534,7 @@ Examples:
             print(f"\n✓ All plots generated successfully!\n")
 
         except FileNotFoundError as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
             sys.exit(1)
 
     # Comparison mode
@@ -543,12 +543,12 @@ Examples:
             # Discover all experiments
             from extract_metrics import discover_experiments
             exp_paths = discover_experiments('results')
-            print(f"📊 Found {len(exp_paths)} experiments: {[e.name for e in exp_paths]}\n")
+            print(f"Found {len(exp_paths)} experiments: {[e.name for e in exp_paths]}\n")
         else:
             exp_paths = [Path(p) for p in args.compare]
 
         if not exp_paths:
-            print("❌ No experiments found")
+            print("No experiments found")
             sys.exit(1)
 
         # Determine output directory
@@ -557,7 +557,7 @@ Examples:
         else:
             output_dir = Path('results') / 'comparison_plots'
 
-        print(f"📁 Output directory: {output_dir}\n")
+        print(f"Output directory: {output_dir}\n")
 
         # Load all metrics
         experiments_data = []
@@ -567,26 +567,26 @@ Examples:
                 metrics = load_metrics(metrics_file)
                 experiments_data.append({'name': exp_path.name, 'metrics': metrics})
             except FileNotFoundError:
-                print(f"⚠️  Warning: Metrics not found for {exp_path.name}, skipping...")
+                print(f"Warning: Metrics not found for {exp_path.name}, skipping...")
 
         if not experiments_data:
-            print("❌ No valid experiments to compare")
+            print("No valid experiments to compare")
             sys.exit(1)
 
         # Generate comparison plots
-        print(f"📊 Comparing {len(experiments_data)} experiments...\n")
+        print(f"Comparing {len(experiments_data)} experiments...\n")
 
         metrics_to_plot = ['val_acc', 'train_acc', 'val_loss', 'train_loss']
 
         for metric in metrics_to_plot:
             print(f"  Creating {metric} comparison...")
             comp_path = plot_comparison(experiments_data, metric, output_dir)
-            print(f"  ✓ Saved: {comp_path}")
+            print(f"  Saved: {comp_path}")
 
-        print(f"\n✓ All comparison plots generated successfully!\n")
+        print(f"\nAll comparison plots generated successfully!\n")
 
     else:
-        print("❌ Error: Must specify --experiment, --compare, or --all")
+        print("Error: Must specify --experiment, --compare, or --all")
         parser.print_help()
         sys.exit(1)
 
