@@ -177,89 +177,91 @@ All source files now have comprehensive scientific-quality documentation:
 
 ---
 
-## Phase 3: Create Scripts (NEXT - TODO)
+## ✅ Phase 3: Create Scripts and Documentation (COMPLETED)
 
-Now that the code is documented, we need to create the training and analysis scripts.
+**Completed Actions:**
 
-### 3.1 Create Project README
+All scripts have been created with comprehensive documentation and are ready for use:
 
-**File:** [README.md](README.md) (NEW - create at project root)
+### 3.1 Scripts Created
 
-**Structure:**
-```markdown
-# ViT FP8 Precision Experiments
+1. **[scripts/train.py](scripts/train.py)** - Main training script:
+   - Loads YAML configuration files
+   - Sets up model, data loaders, and trainer
+   - Runs training with automatic checkpointing
+   - Comprehensive error handling and logging
+   - Usage: `python scripts/train.py --config configs/BaseFP32.yaml`
 
-## Project Overview
-- Brief description of project goals
-- 4 experiments comparing FP32/FP16 precision with baseline/augmented regularization
+2. **[scripts/extract_metrics.py](scripts/extract_metrics.py)** - Metrics extraction and analysis:
+   - Load metrics from JSON files
+   - Compute summary statistics (best accuracy, convergence, etc.)
+   - Compare multiple experiments side-by-side
+   - Export results to CSV
+   - Usage: `python scripts/extract_metrics.py --all --output metrics_summary.csv`
 
-## Experiments
-| Name | Precision | Augmentation | Purpose |
-|------|-----------|--------------|---------|
-| BaseFP32 | FP32 | Basic | Baseline without regularization |
-| AugmFP32 | FP32 | Extended | Best model with full regularization |
-| BaseFP16 | FP16 | Basic | Mixed precision baseline |
-| AugmFP16 | FP16 | Extended | Test regularization in FP16 |
+3. **[scripts/generate_plots.py](scripts/generate_plots.py)** - Visualization generation:
+   - Publication-quality plots (300 DPI)
+   - Training/validation curves
+   - Learning rate schedules
+   - Hardware monitoring plots
+   - Multi-experiment comparisons
+   - Usage: `python scripts/generate_plots.py --all`
 
-## Project Structure
-```
-ViT-FP8-experiments/
-├── configs/          - YAML configuration files
-├── src/              - Source code
-│   ├── models/       - Model definitions
-│   ├── data/         - Data loaders and augmentation
-│   ├── training/     - Training logic
-│   └── utils/        - Utilities (monitoring, etc.)
-├── scripts/          - Execution scripts
-│   ├── train.py               - Main training script
-│   ├── extract_metrics.py     - Metrics extraction
-│   └── generate_plots.py      - Visualization
-└── results/          - Outputs (organized by experiment)
-    ├── BaseFP32/     - Baseline FP32 results
-    │   ├── checkpoints/
-    │   ├── metrics/
-    │   └── plots/
-    └── ...
-```
+4. **[scripts/rerun_all_experiments.py](scripts/rerun_all_experiments.py)** - Batch experiment runner:
+   - Sequential execution of all experiments
+   - Automatic cooldown periods between experiments
+   - Progress tracking and status updates
+   - Graceful error handling
+   - Optional post-processing (metrics + plots)
+   - Usage: `python scripts/rerun_all_experiments.py`
 
-## Installation
+### 3.2 Comprehensive README Created
+
+**File:** [README.md](README.md) (CREATED)
+
+**Content Includes:**
+- **Project Overview**: Research questions, experimental design, key features
+- **Experiments Table**: Complete description of all 4 experiments with augmentation details
+- **Installation**: Prerequisites, setup instructions, dependency installation
+- **Usage Guide**: Examples for all scripts (train.py, extract_metrics.py, generate_plots.py, rerun_all_experiments.py)
+- **Project Structure**: Complete directory tree with explanations
+- **Results Interpretation**: How to analyze metrics, identify issues, interpret plots
+- **Troubleshooting**: Common issues and solutions
+- **Advanced Usage**: GPU monitoring, custom configs, development tips
+- **Dependencies**: Detailed list with versions and purposes
+- **Citation**: BibTeX entry and related papers
+- **Contributing**: Guidelines for contributions
+
+### Key Script Features:
+
+**All scripts include:**
+- Comprehensive docstrings (NumPy/Google style)
+- Inline comments explaining logic
+- Clear usage examples in docstrings
+- Command-line help messages
+- Graceful error handling
+- Progress indicators (tqdm, status messages)
+- Input validation
+- Detailed logging
+
+**Scripts are easy to use:**
 ```bash
-pip install torch torchvision timm pyyaml
-```
+# Training
+python scripts/train.py --config configs/BaseFP32.yaml
 
-## Usage
+# Metrics extraction
+python scripts/extract_metrics.py --all --output metrics_summary.csv
 
-### Training
-```bash
-python scripts/train.py --config configs/AugmFP32.yaml
-```
+# Plotting
+python scripts/generate_plots.py --all
 
-### Generate Plots
-```bash
-python scripts/generate_plots.py
-```
-
-### Extract Metrics
-```bash
-python scripts/extract_metrics.py
-```
-
-## Results Structure
-
-Each experiment saves:
-- **checkpoints/** - Model weights (best_model.pt, final_model.pt)
-- **metrics/** - Training metrics (metrics.json, final_metrics.json)
-- **plots/** - Visualizations (loss curves, accuracy plots)
-
-## Reproducibility
-- All experiments use fixed random seeds
-- Configurations saved in configs/
-- Hardware stats logged during training
+# Batch execution
+python scripts/rerun_all_experiments.py
 ```
 
 ---
 
-## Phase 4: Rerun Experiments (LATER - TODO)
+## Phase 4: Rerun Experiments (NEXT - TODO)
 
 ### 4.1 Create Batch Rerun Script
 
@@ -352,15 +354,15 @@ find results -name "*.json" -o -name "*.png"
 4. ✅ **src/utils/metrics.py** → comprehensive docstrings added
 5. ✅ **src/data/dataset.py** → comprehensive docstrings added
 6. ✅ **src/models/vit_model.py** → comprehensive docstrings added
-7. **README.md** → comprehensive project documentation (TODO)
 
-### Phase 3 (NEXT - Scripts):
-1. **scripts/train.py** → create main training script
-2. **scripts/extract_metrics.py** → create metrics extraction script
-3. **scripts/generate_plots.py** → create plotting script
-4. **scripts/rerun_all_experiments.py** → create batch execution script
+### ✅ Phase 3 - Scripts and Documentation (COMPLETED):
+1. ✅ **scripts/train.py** → main training script with comprehensive documentation
+2. ✅ **scripts/extract_metrics.py** → metrics extraction and analysis script
+3. ✅ **scripts/generate_plots.py** → visualization generation script
+4. ✅ **scripts/rerun_all_experiments.py** → batch execution script with cooldown
+5. ✅ **README.md** → comprehensive project documentation
 
-### Phase 4 (TODO - Experiments):
+### Phase 4 (NEXT - Experiments):
 1. Run all 4 experiments with clean codebase
 2. Generate analysis outputs
 
@@ -479,14 +481,14 @@ git reset --hard HEAD~1  # Undo last commit
 
 ### Phase 2 - Documentation:
 - [x] All src/ files have comprehensive docstrings
-- [ ] README.md created and comprehensive
 
-### Phase 3 - Scripts (NEXT):
-- [ ] train.py created for running experiments
-- [ ] extract_metrics.py created for metrics analysis
-- [ ] generate_plots.py created for visualizations
-- [ ] rerun_all_experiments.py created for batch execution
+### Phase 3 - Scripts and Documentation:
+- [x] train.py created with comprehensive documentation
+- [x] extract_metrics.py created with comprehensive documentation
+- [x] generate_plots.py created with comprehensive documentation
+- [x] rerun_all_experiments.py created with comprehensive documentation
+- [x] README.md created and comprehensive
 
-### Phase 4 - Experiments:
+### Phase 4 - Experiments (NEXT):
 - [ ] All 4 experiments run successfully with fresh code
 - [ ] Metrics and plots generated in correct experiment directories

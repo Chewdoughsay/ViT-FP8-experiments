@@ -11,13 +11,20 @@ import time
 
 from src.utils.metrics import MetricsTracker, calculate_accuracy, Timer
 
-# Importam monitorul nou (cu fallback daca nu exista psutil)
+# Import hardware monitors (with fallback if dependencies missing)
 try:
     from src.utils.system_monitor import SystemMonitor
-    HAS_MONITOR = True
+    HAS_SYSTEM_MONITOR = True
 except ImportError:
     print("⚠️ SystemMonitor not found. Install psutil: pip install psutil")
-    HAS_MONITOR = False
+    HAS_SYSTEM_MONITOR = False
+
+try:
+    from src.utils.gpu_monitor import GPUMonitor
+    HAS_GPU_MONITOR = True
+except ImportError:
+    print("⚠️ GPUMonitor not available (macOS Apple Silicon only)")
+    HAS_GPU_MONITOR = False
 
 
 class ViTTrainer:
@@ -26,7 +33,7 @@ class ViTTrainer:
 
     This trainer provides a complete training pipeline for Vision Transformers with:
     - Mixed Precision Training (AMP) for FP16/FP32
-    - Hardware monitoring (CPU, memory, thermal throttling)
+    - Hardware monitoring (CPU, memory, thermal throttling, GPU on Apple Silicon)
     - Automatic metrics tracking and checkpointing
     - Learning rate scheduling with optional warmup
     - Gradient clipping and label smoothing
@@ -35,7 +42,12 @@ class ViTTrainer:
     The trainer automatically organizes outputs into experiment-specific directories:
     - Checkpoints: save_dir (e.g., results/BaseFP32/checkpoints/)
     - Metrics: save_dir/../metrics/ (e.g., results/BaseFP32/metrics/)
-    - Hardware stats: metrics directory
+    - Hardware stats: metrics directory (hardware_stats.json, gpu_stats.csv)
+
+    GPU Monitoring (Apple Silicon):
+    - Automatically requests sudo access when training starts
+    - If granted, GPU utilization and power are monitored
+    - If denied, training continues without GPU stats (no error)
 
     Args:
         model (torch.nn.Module): Vision Transformer model to train
@@ -130,8 +142,15 @@ class ViTTrainer:
         # 2. Metrics tracker (saves to metrics directory)
         self.metrics = MetricsTracker(save_dir=self.metrics_dir)
 
-        # 3. Hardware monitor
-        self.monitor = SystemMonitor(interval=2.0) if HAS_MONITOR else None
+        # 3. Hardware monitors
+        self.monitor = SystemMonitor(interval=2.0) if HAS_SYSTEM_MONITOR else None
+
+        # GPU monitor (Apple Silicon only, requires sudo)
+        if HAS_GPU_MONITOR:
+            gpu_stats_path = self.metrics_dir / 'gpu_stats.csv'
+            self.gpu_monitor = GPUMonitor(output_file=str(gpu_stats_path), interval=1000)
+        else:
+            self.gpu_monitor = None
 
         # 4. Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss(label_smoothing=label_smoothing)
@@ -322,9 +341,12 @@ class ViTTrainer:
             print("🚀 Optimized with Mixed Precision (AMP)")
         print(f"{'='*60}\n")
 
-        # Start Monitor
+        # Start Monitors
         if self.monitor:
             self.monitor.start()
+
+        if self.gpu_monitor:
+            self.gpu_monitor.start()  # Will prompt for sudo password
 
         # Warmup
         warmup_sched = None
@@ -381,7 +403,7 @@ class ViTTrainer:
             self.metrics.save('interrupted_metrics.json')
 
         finally:
-            # Stop monitor and save hardware stats
+            # Stop monitors and save hardware stats
             if self.monitor:
                 summary, full_stats = self.monitor.stop()
                 print("\nHardware Summary:")
@@ -396,6 +418,11 @@ class ViTTrainer:
                 import json
                 with open(self.metrics_dir / 'hardware_stats.json', 'w') as f:
                     json.dump(full_stats, f)
+
+            # Stop GPU monitor
+            if self.gpu_monitor:
+                self.gpu_monitor.stop()
+                print(f"  💾 GPU stats saved to: {self.metrics_dir / 'gpu_stats.csv'}")
 
             # Save final metrics
             self.metrics.save('final_metrics.json')
