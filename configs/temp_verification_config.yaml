@@ -1,0 +1,28 @@
+data:
+  augmentation: extended
+  batch_size: 128
+  dataset: cifar10
+  num_workers: 2
+description: FP32 with full regularization (BEST MODEL)
+hardware:
+  device: mps
+model:
+  name: vit_tiny_patch16_224
+  num_classes: 10
+  pretrained: false
+name: exp2_regularized
+paths:
+  data_dir: ./data
+  save_dir: results/verification_run_fp32
+training:
+  gradient_clip: 1.0
+  label_smoothing: 0.1
+  learning_rate: 0.001
+  num_epochs: 50
+  optimizer: adamw
+  precision: fp32
+  save_every: 10
+  scheduler: cosine
+  use_amp: false
+  warmup_epochs: 5
+  weight_decay: 0.1
