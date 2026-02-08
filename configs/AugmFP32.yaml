@@ -36,4 +36,4 @@ hardware:
 
 paths:
   data_dir: "./data"
-  save_dir: "results/checkpoints/AugmFP32"
+  save_dir: "results/AugmFP32/checkpoints"

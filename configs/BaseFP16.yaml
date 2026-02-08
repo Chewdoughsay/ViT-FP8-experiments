@@ -36,4 +36,4 @@ hardware:
 
 paths:
   data_dir: "./data"
-  save_dir: "results/checkpoints/BaseFP16"
+  save_dir: "results/BaseFP16/checkpoints"

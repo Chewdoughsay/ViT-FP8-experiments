@@ -36,6 +36,6 @@ hardware:
 
 paths:
   data_dir: "./data"
-  save_dir: "results/checkpoints/AugmFP16"
+  save_dir: "results/AugmFP16/checkpoints"
 
 # Expected result: ~83% accuracy like exp2, possibly slightly faster

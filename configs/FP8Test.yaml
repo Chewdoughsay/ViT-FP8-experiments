@@ -5,7 +5,7 @@ model:
   name: "vit_tiny_patch16_224"
   num_classes: 10
   pretrained: false
-  load_checkpoint: "results/checkpoints/AugmFP16/best_model.pt"  # Load trained FP16 model
+  load_checkpoint: "results/AugmFP16/checkpoints/best_model.pt"  # Load trained FP16 model
 
 data:
   dataset: "cifar10"
@@ -33,7 +33,7 @@ hardware:
 
 paths:
   data_dir: "./data"
-  save_dir: "results/checkpoints/FP8Test"
+  save_dir: "results/FP8Test/checkpoints"
 
 # Expected: Measure accuracy degradation from FP16 -> FP8 -> FP16 conversion
 # Hypothesis: Small accuracy loss (<1%) if quantization is done properly
