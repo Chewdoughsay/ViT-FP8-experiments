@@ -1,11 +1,11 @@
-name: "exp4_fp8_test"
+name: "FP8Test"
 description: "FP8 quantization test - convert FP16 model to FP8 and back"
 
 model:
   name: "vit_tiny_patch16_224"
   num_classes: 10
   pretrained: false
-  load_checkpoint: "results/checkpoints/exp3_fp16_fixed/best_model.pt"  # Load trained FP16 model
+  load_checkpoint: "results/checkpoints/AugmFP16/best_model.pt"  # Load trained FP16 model
 
 data:
   dataset: "cifar10"
@@ -33,7 +33,7 @@ hardware:
 
 paths:
   data_dir: "./data"
-  save_dir: "results/checkpoints/exp4_fp8_test"
+  save_dir: "results/checkpoints/FP8Test"
 
 # Expected: Measure accuracy degradation from FP16 -> FP8 -> FP16 conversion
 # Hypothesis: Small accuracy loss (<1%) if quantization is done properly

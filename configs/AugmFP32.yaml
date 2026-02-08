@@ -1,4 +1,4 @@
-name: "exp2_regularized"
+name: "AugmFP32"
 description: "FP32 with full regularization (BEST MODEL)"
 
 model:
@@ -36,4 +36,4 @@ hardware:
 
 paths:
   data_dir: "./data"
-  save_dir: "results/checkpoints/exp2_regularized"
+  save_dir: "results/checkpoints/AugmFP32"

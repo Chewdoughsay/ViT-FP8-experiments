@@ -1,5 +1,5 @@
-name: "exp1_baseline"
-description: "Baseline FP32 with minimal regularization"
+name: "BaseFP16"
+description: "Baseline FP16 with minimal regularization"
 
 model:
   name: "vit_tiny_patch16_224"
@@ -24,9 +24,9 @@ training:
   gradient_clip: null
   warmup_epochs: 0
 
-  # Precision
-  use_amp: false
-  precision: "fp32"
+  # Mixed Precision
+  use_amp: true
+  precision: "fp16"
 
   # Checkpointing
   save_every: 10
@@ -36,4 +36,4 @@ hardware:
 
 paths:
   data_dir: "./data"
-  save_dir: "results/checkpoints/exp1_baseline"
+  save_dir: "results/checkpoints/BaseFP16"

@@ -1,4 +1,4 @@
-name: "exp3_fp16_fixed"
+name: "AugmFP16"
 description: "FP16 with FULL regularization (FIXED - extended augmentation)"
 
 model:
@@ -36,6 +36,6 @@ hardware:
 
 paths:
   data_dir: "./data"
-  save_dir: "results/checkpoints/exp3_fp16_fixed"
+  save_dir: "results/checkpoints/AugmFP16"
 
 # Expected result: ~83% accuracy like exp2, possibly slightly faster
