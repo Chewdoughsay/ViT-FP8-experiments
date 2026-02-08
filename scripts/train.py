@@ -69,7 +69,7 @@ def save_timing_report(timing_data, output_path):
     with open(output_path, 'w') as f:
         json.dump(timing_data, f, indent=2)
 
-    print(f"✓ Timing report saved to: {output_path}")
+    print(f"Timing report saved to: {output_path}")
 
 
 def main():
@@ -110,7 +110,7 @@ def main():
     print()
 
     # Create model
-    print("📦 Creating model...")
+    print("Creating model...")
     model = create_vit_model(
         model_name=config['model']['name'],
         num_classes=config['model']['num_classes'],
@@ -120,7 +120,7 @@ def main():
     print(f"✓ Model created: {model_info['trainable_params_millions']:.2f}M parameters\n")
 
     # Create data loaders
-    print("📊 Loading CIFAR-10 dataset...")
+    print("Loading CIFAR-10 dataset...")
     train_loader, test_loader = get_cifar10_loaders(
         batch_size=config['data']['batch_size'],
         num_workers=config['data']['num_workers'],
@@ -130,7 +130,7 @@ def main():
     print(f"✓ Data loaders ready: {len(train_loader)} train batches, {len(test_loader)} test batches\n")
 
     # Initialize trainer
-    print("🚀 Initializing trainer...")
+    print("Initializing trainer...")
     trainer = ViTTrainer(
         model=model,
         train_loader=train_loader,
@@ -144,12 +144,12 @@ def main():
         warmup_epochs=config['training']['warmup_epochs'],
         use_amp=config['training']['use_amp']
     )
-    print("✓ Trainer initialized\n")
+    print("Trainer initialized\n")
 
     # Record start time
     start_time = time.time()
     start_timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    print(f"⏱️  Training started at: {start_timestamp}\n")
+    print(f"Training started at: {start_timestamp}\n")
 
     # Train
     try:
@@ -185,7 +185,7 @@ def main():
 
         # Print summary
         print("\n" + "="*70)
-        print("🎉 Training Completed Successfully!")
+        print("Training Completed Successfully!")
         print("="*70)
         print(f"\nTiming Summary:")
         print(f"  Started: {start_timestamp}")
@@ -202,12 +202,12 @@ def main():
     except KeyboardInterrupt:
         end_time = time.time()
         total_duration = end_time - start_time
-        print(f"\n\n⚠️  Training interrupted after {total_duration/60:.1f} minutes")
+        print(f"\n\nTraining interrupted after {total_duration/60:.1f} minutes")
         print(f"Partial results saved to: {trainer.metrics_dir}")
         sys.exit(0)
 
     except Exception as e:
-        print(f"\n❌ Error during training: {e}")
+        print(f"\nError during training: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
