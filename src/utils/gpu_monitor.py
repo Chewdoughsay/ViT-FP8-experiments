@@ -71,12 +71,12 @@ class GPUMonitor:
     Example:
         >>> monitor = GPUMonitor('results/BaseFP32/metrics/gpu_stats.csv')
         >>> monitor.start()  # Prompts for sudo password
-        🔒 GPU Monitor requires sudo access...
+        GPU Monitor requires sudo access...
         Password: ****
-        🎮 GPU Monitor started...
+        GPU Monitor started...
         >>> # ... training happens ...
         >>> monitor.stop()
-        🛑 GPU Monitor stopped.
+        GPU Monitor stopped.
 
     Notes:
         - Gracefully handles sudo denial (prints warning, continues without monitoring)
@@ -184,7 +184,7 @@ class GPUMonitor:
 
         except Exception as e:
             if self.running:
-                print(f"⚠️  GPU Monitor error: {e}")
+                print(f"GPU Monitor error: {e}")
 
     def start(self):
         """
@@ -193,11 +193,11 @@ class GPUMonitor:
         If sudo access is denied, prints a warning and returns without monitoring.
         Training will continue without GPU stats.
         """
-        print("🔒 GPU Monitor requires sudo access for powermetrics...")
+        print("GPU Monitor requires sudo access for powermetrics...")
 
         if not self._check_sudo():
-            print("⚠️  Sudo access denied. GPU monitoring disabled.")
-            print("   (Training will continue without GPU stats)")
+            print("Sudo access denied. GPU monitoring disabled.")
+            print("(Training will continue without GPU stats)")
             self.has_sudo = False
             return
 
@@ -206,8 +206,8 @@ class GPUMonitor:
         self.thread = threading.Thread(target=self._monitor_loop, daemon=True)
         self.thread.start()
 
-        print("🎮 GPU Monitor started...")
-        print(f"💾 Saving to: {self.output_file}")
+        print("GPU Monitor started...")
+        print(f"Saving to: {self.output_file}")
 
     def stop(self):
         """
@@ -233,7 +233,7 @@ class GPUMonitor:
         if self.thread:
             self.thread.join(timeout=5)
 
-        print("🛑 GPU Monitor stopped.")
+        print("GPU Monitor stopped.")
         return {}
 
 
@@ -270,12 +270,12 @@ def monitor_stream(output_file, interval=1000):
     Example:
         >>> # Monitor with 500ms sampling
         >>> monitor_stream('results/logs/fp16_run.csv', interval=500)
-        🔒 Starting GPU Monitor (Robust Stream)...
-        💾 Saving logs to: results/logs/fp16_run.csv
+        Starting GPU Monitor (Robust Stream)...
+        Saving logs to: results/logs/fp16_run.csv
         [14:32:01] GPU Util:  45.2% | GPU Pwr:  3420 mW | CPU Pwr:  1250 mW
         ...
         ^C
-        🛑 Monitor stopped.
+        Monitor stopped.
 
     Notes:
         - Uses regex matching for robust parsing (case-insensitive)
@@ -292,8 +292,8 @@ def monitor_stream(output_file, interval=1000):
         >>> from src.utils.gpu_monitor import monitor_stream
         >>> monitor_stream('results/logs/experiment.csv')
     """
-    print(f"🔒 Starting GPU Monitor (Robust Stream)...")
-    print(f"💾 Saving logs to: {output_file}")
+    print(f"Starting GPU Monitor (Robust Stream)...")
+    print(f"Saving logs to: {output_file}")
 
     # Write CSV header
     with open(output_file, 'w', newline='') as f:
@@ -358,7 +358,7 @@ def monitor_stream(output_file, interval=1000):
                         ])
 
     except KeyboardInterrupt:
-        print("\n🛑 Monitor stopped.")
+        print("\nMonitor stopped.")
         process.terminate()
 
 

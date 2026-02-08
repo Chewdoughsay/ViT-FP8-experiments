@@ -157,13 +157,13 @@ class SystemMonitor:
         Example:
             >>> monitor = SystemMonitor(interval=2.0)
             >>> monitor.start()
-            🖥️  System Monitor started...
+            System Monitor started...
         """
         self.running = True
         self.stats = {k: [] for k in self.stats}
         self.thread = threading.Thread(target=self._monitor_loop, daemon=True)
         self.thread.start()
-        print("🖥️  System Monitor started...")
+        print("System Monitor started...")
 
     def stop(self):
         """
@@ -188,7 +188,7 @@ class SystemMonitor:
 
         Example:
             >>> summary, stats = monitor.stop()
-            🛑 System Monitor stopped.
+            System Monitor stopped.
             >>> print(f"Avg CPU: {summary['avg_cpu']:.1f}%")
             >>> print(f"Throttled: {summary['throttled']}")
             >>> # Access raw data for plotting
@@ -217,5 +217,5 @@ class SystemMonitor:
             'max_thermal': safe_max(self.stats['thermal_pressure']),
             'throttled': any(t > 0 for t in self.stats['thermal_pressure'])
         }
-        print("🛑 System Monitor stopped.")
+        print("System Monitor stopped.")
         return summary, self.stats

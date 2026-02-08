@@ -16,14 +16,14 @@ try:
     from src.utils.system_monitor import SystemMonitor
     HAS_SYSTEM_MONITOR = True
 except ImportError:
-    print("⚠️ SystemMonitor not found. Install psutil: pip install psutil")
+    print("SystemMonitor not found. Install psutil: pip install psutil")
     HAS_SYSTEM_MONITOR = False
 
 try:
     from src.utils.gpu_monitor import GPUMonitor
     HAS_GPU_MONITOR = True
 except ImportError:
-    print("⚠️ GPUMonitor not available (macOS Apple Silicon only)")
+    print("GPUMonitor not available (macOS Apple Silicon only)")
     HAS_GPU_MONITOR = False
 
 
@@ -167,7 +167,7 @@ class ViTTrainer:
         # 5. Mixed precision scaler
         self.scaler = None
         if self.use_amp:
-            print(f"⚡ Mixed Precision (AMP) enabled for device: {device}")
+            print(f"Mixed Precision (AMP) enabled for device: {device}")
             self.scaler = torch.amp.GradScaler(device)
 
         print(f"Trainer initialized on device: {device}")
@@ -315,9 +315,9 @@ class ViTTrainer:
             >>> trainer = ViTTrainer(model, train_loader, test_loader, device='mps')
             >>> trainer.train(num_epochs=50, save_every=10)
             Starting training for 50 epochs
-            ⚡ Optimized with Mixed Precision (AMP)
+            Optimized with Mixed Precision (AMP)
             ============================================================
-            🖥️  System Monitor started...
+            System Monitor started...
 
             Epoch 1/50
             Training: 100%|██████████| 391/391 [01:23<00:00, 4.69it/s]
@@ -325,7 +325,7 @@ class ViTTrainer:
             Epoch 1 Summary: [Time: 95.2s]
               Train: Loss 2.1234 | Acc 0.2456
               Val:   Loss 1.9876 | Acc 0.2891
-              🎉 New Best Acc: 0.2891
+              New Best Acc: 0.2891
             ...
 
         Notes:
@@ -338,7 +338,7 @@ class ViTTrainer:
         print(f"\n{'='*60}")
         print(f"Starting training for {num_epochs} epochs")
         if self.use_amp:
-            print("🚀 Optimized with Mixed Precision (AMP)")
+            print("Optimized with Mixed Precision (AMP)")
         print(f"{'='*60}\n")
 
         # Start Monitors
@@ -391,14 +391,14 @@ class ViTTrainer:
 
                 if val_acc > best_val_acc:
                     best_val_acc = val_acc
-                    print(f"  🎉 New Best Acc: {val_acc:.4f}")
+                    print(f"New Best Acc: {val_acc:.4f}")
                     self.save_checkpoint(epoch, val_acc, is_best=True)
 
                 if epoch % save_every == 0:
                     self.save_checkpoint(epoch, val_acc, is_best=False)
 
         except KeyboardInterrupt:
-            print("\n⚠️ Training interrupted by user!")
+            print("\nTraining interrupted by user!")
             # Save metrics even if interrupted
             self.metrics.save('interrupted_metrics.json')
 
@@ -410,9 +410,9 @@ class ViTTrainer:
                 print(f"  Avg CPU: {summary['avg_cpu']:.1f}%")
                 print(f"  Avg RAM: {summary['avg_mem']:.1f}%")
                 if summary['throttled']:
-                    print(f"  🔥 WARNING: Thermal Throttling detected! (Level {summary['max_thermal']})")
+                    print(f"WARNING: Thermal Throttling detected! (Level {summary['max_thermal']})")
                 else:
-                    print(f"  ✅ Thermals OK (No throttling)")
+                    print(f"Thermals OK (No throttling)")
 
                 # Save hardware stats to metrics directory
                 import json
@@ -422,7 +422,7 @@ class ViTTrainer:
             # Stop GPU monitor
             if self.gpu_monitor:
                 self.gpu_monitor.stop()
-                print(f"  💾 GPU stats saved to: {self.metrics_dir / 'gpu_stats.csv'}")
+                print(f"GPU stats saved to: {self.metrics_dir / 'gpu_stats.csv'}")
 
             # Save final metrics
             self.metrics.save('final_metrics.json')
@@ -490,7 +490,7 @@ class ViTTrainer:
         if is_best:
             save_path = self.checkpoint_dir / 'best_model.pt'
             torch.save(checkpoint, save_path)
-            print(f"  💾 Best model saved: {save_path}")
+            print(f"Best model saved: {save_path}")
         else:
             save_path = self.checkpoint_dir / f'checkpoint_epoch_{epoch}.pt'
             torch.save(checkpoint, save_path)
